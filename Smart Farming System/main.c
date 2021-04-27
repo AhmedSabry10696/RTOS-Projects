@@ -1,3 +1,14 @@
+/**
+ * @file main.c
+ * @author Ahmed Sabry (ahmed.sabry10696@gmail.com)
+ * @brief Smart Farming Project based on FREE RTOS and ATMEGA 32
+ * @version 0.1
+ * @date 2021-04-27
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
+
 /* include OS header file */
 #include "FreeRTOS.h"
 #include "task.h"
@@ -45,7 +56,7 @@ void T_Display(void* pvParam);
 #define HEATER	   		PIN3
 #define COOLER	   		PIN4
 
-/*************** Display ********************/
+/******************* Display ************************/
 #define LCD_MAIN_SCREEN_L1		"T =    C    H =    %"
 #define LCD_MAIN_SCREEN_L2		"TT=    C    TH=    %"
 #define LCD_TEMP_COL			4
@@ -71,11 +82,19 @@ EventBits_t ebControlBits;
 EventBits_t ebDisplayBits;
 SemaphoreHandle_t bsCheck;
 
+/**
+ * @brief Motor State enum
+ * 
+ */
 typedef enum
 {
 	OFF,ON
 }Motor;
 
+/**
+ * @brief System Motors
+ * 
+ */
 struct
 {
 	Motor Water_Pump;
@@ -83,17 +102,36 @@ struct
 	Motor Cooler;
 }Motors_State;
 
+/**
+ * @brief System States enum
+ * 
+ */
 typedef enum  {MainState, ConfigState} SystemState_t ;
 
+
+/**
+ * @brief All system data
+ * 
+ */
 struct
 {
+	/* system state */
 	SystemState_t SystemState;
+
+	/**
+	 * @brief sensors data
+	 * 
+	 */
 	struct
 	{
 		uint8 TempData;
 		uint8 HumiData;
 	} SensorData;
 
+	/**
+	 * @brief threshold values
+	 * 
+	 */
 	struct
 	{
 		uint8 TempT;
@@ -105,6 +143,7 @@ struct
 
 int main(void)
 {
+	/* os init */
 	System_Init();
 
 	/* OS Object Creation */
@@ -112,16 +151,23 @@ int main(void)
 	egDisplay = xEventGroupCreate();
 	bsCheck = xSemaphoreCreateBinary();
 
+	/* tasks creation with different periorities */
 	xTaskCreate(T_Display, 	 NULL, 200, NULL, 2, NULL);
 	xTaskCreate(T_Sensing, 	 NULL, 100,  NULL, 3, NULL);
 	xTaskCreate(T_Terminal,  NULL, 150, NULL, 4, NULL);
 	xTaskCreate(T_SysCheck,  NULL, 100,  NULL, 5, NULL);
 	xTaskCreate(T_Control,	 NULL, 150, NULL, 6, NULL);
 
+	/* start scheduling */
 	vTaskStartScheduler();
 }
 
 
+/**
+ * @brief Control task
+ * 
+ * @param pvParam 
+ */
 void T_Control(void* pvParam)
 {
 		
@@ -170,7 +216,11 @@ void T_Control(void* pvParam)
 	} /* end while (1) */
 }
 
-
+/**
+ * @brief System check task
+ * 
+ * @param pvParam 
+ */
 void T_SysCheck(void* pvParam)
 {
 	/* initial defaults */
@@ -220,7 +270,11 @@ void T_SysCheck(void* pvParam)
 	} /* end of while 1 */
 }
 
-
+/**
+ * @brief terminal task
+ * 
+ * @param pvParam 
+ */
 void T_Terminal(void* pvParam)
 {
 	uint8 data;
@@ -232,7 +286,8 @@ void T_Terminal(void* pvParam)
 
 	static enum {TempReceiving = 13, HumiReceiving} ReceivingState;
 	
-	ReceivingState = TempReceiving;  /* Default entry point */
+	/* Default entry point */
+	ReceivingState = TempReceiving; 
 	uint8 i = 0;
 
 	while(1)
@@ -245,7 +300,8 @@ void T_Terminal(void* pvParam)
 				{
 					if(MainState == SFS.SystemState )
 					{
-						if('C' == data)	/* the data is 'C' */
+						/* the data is 'C' */
+						if('C' == data)	
 						{
 							SFS.SystemState = ConfigState;
 							i = 0; 	/* clearing index to start saving from zero in next config */
@@ -389,7 +445,11 @@ void T_Terminal(void* pvParam)
 	} /* end of while 1 */
 }
 
-
+/**
+ * @brief Sensing task
+ * 
+ * @param pvParam 
+ */
 void T_Sensing(void* pvParam)
 {
 	uint8 tempValue = 0;
@@ -431,7 +491,11 @@ void T_Sensing(void* pvParam)
 	}
 }
 
-
+/**
+ * @brief Display task
+ * 
+ * @param pvParam 
+ */
 void T_Display(void* pvParam)
 {
 	while(1)
@@ -646,10 +710,6 @@ void T_Display(void* pvParam)
 
 void System_Init(void)
 {
-
-	/*initial system parameters*/
-
-
 	/* lcd init */
 	LCD_init();
 
