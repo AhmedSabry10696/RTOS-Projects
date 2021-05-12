@@ -594,6 +594,7 @@ void T_Display(void* pvParam)
 					LCD_clearScreen();
 					LCD_displayString(LCD_CONFIG_SCREEN_L1);
 					LCD_displayString(LCD_CONFIG_SCREEN_L2);
+					LCD_goToRowColumn(3,0);
 					LCD_displayString(LCD_CONFIG_SCREEN_L4);
 
 					LCD_goToRowColumn(0,LCD_CONFIG_COL);
