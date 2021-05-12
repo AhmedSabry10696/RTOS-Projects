@@ -8,6 +8,9 @@ A real time system based on FreeRTOS and Atmega32 controlling:
 
 3 - also configure the threshold for both temperature and humidity in run-time by PC (terminal interfacing)
 
+## Simulation photo
+![Tasksdiagram](./img/Simulation.png)
+
 ## Tasks 
 
 the system consist of 6 tasks:
