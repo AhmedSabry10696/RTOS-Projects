@@ -48,11 +48,13 @@ void UART_sendByte(const uint8 data)
 	/* Put the required data in the UDR register and it also clear the UDRE flag as 
 	 * the UDR register is not empty now */	 
 	UDR = data;
-	/************************* Another Method *************************
+	/************** Another Method *********************
 	UDR = data;
-	while(BIT_IS_CLEAR(UCSRA,TXC)){} // Wait until the transmission is complete TXC = 1
-	SET_BIT(UCSRA,TXC); // Clear the TXC flag
-	*******************************************************************/	
+	// Wait until the transmission is complete TXC = 1 
+	while(BIT_IS_CLEAR(UCSRA,TXC)){}
+	// Clear the TXC flag
+	SET_BIT(UCSRA,TXC); 
+	****************************************************/	
 }
 
 uint8 UART_receiveByte(void)
@@ -77,7 +79,6 @@ ERROR_t UART_receiveByte_NonBlocking(uint8 * pData)
 	{
 		return PENDING;
 	}
-
 }
 
 void UART_sendString(const char *Str)
@@ -88,23 +89,26 @@ void UART_sendString(const char *Str)
 		UART_sendByte(Str[i]);
 		i++;
 	}
-	/************************* Another Method *************************
+	/********* Another Method **********
 	while(*Str != '\0')
 	{
 		UART_sendByte(*Str);
 		Str++;
 	}		
-	*******************************************************************/
+	************************************/
 }
 
 void UART_receiveString(char *Str)
 {
 	uint8 i = 0;
 	Str[i] = UART_receiveByte();
+	
+	/* receive till # end of string */
 	while(Str[i] != '#')
 	{
 		i++;
 		Str[i] = UART_receiveByte();
 	}
+	/* add null at the end of string */
 	Str[i] = '\0';
 }
