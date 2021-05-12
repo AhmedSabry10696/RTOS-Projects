@@ -1,4 +1,4 @@
-main.d main.o: .././main.c ../FreeRTOS/Inc/FreeRTOS.h \
+main.d main.o: .././main.c ../inc/APP/app.h ../FreeRTOS/Inc/FreeRTOS.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stddef.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdint.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\stdint.h \
@@ -26,6 +26,8 @@ main.d main.o: .././main.c ../FreeRTOS/Inc/FreeRTOS.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\string.h \
  ../inc/MCAL/uart.h ../inc/ECU/lcd.h ../inc/MCAL/adc.h \
  ../inc/ECU/sensors.h
+
+../inc/APP/app.h:
 
 ../FreeRTOS/Inc/FreeRTOS.h:
 

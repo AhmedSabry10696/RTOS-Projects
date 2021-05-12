@@ -15,19 +15,19 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY
   5 .debug_aranges 000003e8  00000000  00000000  0000258c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   000056e0  00000000  00000000  00002974  2**0
+  6 .debug_info   000056d8  00000000  00000000  00002974  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 0000158c  00000000  00000000  00008054  2**0
+  7 .debug_abbrev 000015a9  00000000  00000000  0000804c  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   00002bdc  00000000  00000000  000095e0  2**0
+  8 .debug_line   00002bee  00000000  00000000  000095f5  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  00000ab4  00000000  00000000  0000c1bc  2**2
+  9 .debug_frame  00000ab4  00000000  00000000  0000c1e4  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    000015f0  00000000  00000000  0000cc70  2**0
+ 10 .debug_str    000015f0  00000000  00000000  0000cc98  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    00004002  00000000  00000000  0000e260  2**0
+ 11 .debug_loc    00004002  00000000  00000000  0000e288  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000398  00000000  00000000  00012262  2**0
+ 12 .debug_ranges 00000398  00000000  00000000  0001228a  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -4032,8 +4032,8 @@ void System_Init(void)
 
 00001d9a <main>:
 
-} SFS;
 
+#include "app.h"
 
 int main(void)
 {
