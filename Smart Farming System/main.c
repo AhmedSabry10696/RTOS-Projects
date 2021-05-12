@@ -106,7 +106,7 @@ struct
  * @brief System States enum
  * 
  */
-typedef enum  {MainState, ConfigState} SystemState_t ;
+typedef enum {MainState, ConfigState} SystemState_t ;
 
 
 /**
@@ -151,7 +151,7 @@ int main(void)
 	egDisplay = xEventGroupCreate();
 	bsCheck = xSemaphoreCreateBinary();
 
-	/* tasks creation with different periorities */
+	/* tasks creation with different priorities */
 	xTaskCreate(T_Display, 	 NULL, 200, NULL, 2, NULL);
 	xTaskCreate(T_Sensing, 	 NULL, 100,  NULL, 3, NULL);
 	xTaskCreate(T_Terminal,  NULL, 150, NULL, 4, NULL);
@@ -213,7 +213,7 @@ void T_Control(void* pvParam)
 			}
 		}
 		vTaskDelay(5);
-	} /* end while (1) */
+	}
 }
 
 /**
@@ -247,9 +247,9 @@ void T_SysCheck(void* pvParam)
 				Motors_State.Heater = OFF;
 			}
 
-			xEventGroupSetBits(egControl, E_COOLER | E_HEATER);		/* TODO */
+			xEventGroupSetBits(egControl, E_COOLER | E_HEATER);
 			vTaskDelay(10);
-			xEventGroupClearBits(egControl, E_COOLER | E_HEATER);	/* TODO */
+			xEventGroupClearBits(egControl, E_COOLER | E_HEATER);
 
 			if(SFS.SensorData.HumiData >= SFS.SensorThreshold.HumiT)
 			{
@@ -265,9 +265,9 @@ void T_SysCheck(void* pvParam)
 			xEventGroupClearBits(egControl, E_PUMP);
 
 			xEventGroupSetBits(egDisplay, E_MotorState); 
-		} /* end of if semaphore */
+		}
 
-	} /* end of while 1 */
+	}
 }
 
 /**
@@ -472,7 +472,7 @@ void T_Sensing(void* pvParam)
 						
 		}
 
-		if(E_OK == Humit_u16_Read(&humiValue))
+		if(E_OK == Humi_u16_Read(&humiValue))
 		{
 			if ( SFS.SensorData.HumiData!= humiValue )
 			{
@@ -485,7 +485,7 @@ void T_Sensing(void* pvParam)
 		
 		else
 		{
-						
+			
 		}
 		vTaskDelay(500);  	/* Task periodicity is 1 sec */
 	}
@@ -702,7 +702,7 @@ void T_Display(void* pvParam)
 						LCD_goToRowColumn(2,LCD_COOLER_COL);
 						LCD_displayString("OFF");
 					}
-				} /* if motorState*/
+				}
 								
 		}
 	}

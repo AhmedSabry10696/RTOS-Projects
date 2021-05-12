@@ -1,9 +1,13 @@
-/** @file    common_macros.h
- ** @brief   Common Macros Header File
- ** @author  Ahmed Sabry
- ** @date    22/1/2017
- ** @version 1.0
- */ 
+/**
+ * @file common_macros.h
+ * @author Ahmed Sabry (ahmed.sabry10696@gmail.com)
+ * @brief common macros header files
+ * @version 0.1
+ * @date 2019-05-12
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
 
 #ifndef COMMON_MACROS
 #define COMMON_MACROS

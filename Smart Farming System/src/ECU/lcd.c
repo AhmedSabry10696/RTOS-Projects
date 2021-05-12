@@ -1,8 +1,12 @@
-/*
- * LCD.c
- *
- * Created: 4/2/2017 7:42:46 PM
- * Author: Ahmed Sabry
+/**
+ * @file lcd.c
+ * @author Ahmed Sabry (ahmed.sabry10696@gmail.com)
+ * @brief lcd driver
+ * @version 0.1
+ * @date 2019-05-12
+ * 
+ * @copyright Copyright (c) 2021
+ * 
  */
 
 #include "stdlib.h"

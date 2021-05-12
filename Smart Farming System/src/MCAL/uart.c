@@ -1,11 +1,16 @@
-/*
- * UART.c
- *
- * Created: 2/19/2017 8:07:58 PM
- * Author: Ahmed Sabry
+/**
+ * @file uart.c
+ * @author Ahmed Sabry (ahmed.sabry10696@gmail.com)
+ * @brief UART driver
+ * @version 0.1
+ * @date 2021-05-12
+ * 
+ * @copyright Copyright (c) 2021
+ * 
  */
+
 #include "uart.h"
- 
+
 void UART_init(void)
 {
 	UCSRA = (1<<U2X); /* U2X = 1 for double transmission speed */
@@ -50,7 +55,7 @@ void UART_sendByte(const uint8 data)
 	*******************************************************************/	
 }
 
-uint8 UART_recieveByte(void)
+uint8 UART_receiveByte(void)
 {
 	/* RXC flag is set when the UART receive data so wait until this 
 	 * flag is set to one */
@@ -95,11 +100,11 @@ void UART_sendString(const char *Str)
 void UART_receiveString(char *Str)
 {
 	uint8 i = 0;
-	Str[i] = UART_recieveByte();
+	Str[i] = UART_receiveByte();
 	while(Str[i] != '#')
 	{
 		i++;
-		Str[i] = UART_recieveByte();
+		Str[i] = UART_receiveByte();
 	}
 	Str[i] = '\0';
 }

@@ -19,15 +19,15 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   7 .debug_abbrev 0000158c  00000000  00000000  00008054  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   00002bd9  00000000  00000000  000095e0  2**0
+  8 .debug_line   00002bdc  00000000  00000000  000095e0  2**0
                   CONTENTS, READONLY, DEBUGGING
   9 .debug_frame  00000ab4  00000000  00000000  0000c1bc  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    000015f1  00000000  00000000  0000cc70  2**0
+ 10 .debug_str    000015f0  00000000  00000000  0000cc70  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    00004002  00000000  00000000  0000e261  2**0
+ 11 .debug_loc    00004002  00000000  00000000  0000e260  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000398  00000000  00000000  00012263  2**0
+ 12 .debug_ranges 00000398  00000000  00000000  00012262  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -2622,7 +2622,7 @@ Disassembly of section .text:
     159c:	85 e0       	ldi	r24, 0x05	; 5
     159e:	90 e0       	ldi	r25, 0x00	; 0
     15a0:	0e 94 bb 08 	call	0x1176	; 0x1176 <vTaskDelay>
-	} /* end while (1) */
+	}
     15a4:	cf cf       	rjmp	.-98     	; 0x1544 <T_Control+0x4>
 
 000015a6 <T_SysCheck>:
@@ -2717,7 +2717,7 @@ void T_SysCheck(void* pvParam)
     160c:	11 82       	std	Z+1, r1	; 0x01
 			}
 
-			xEventGroupSetBits(egControl, E_COOLER | E_HEATER);		/* TODO */
+			xEventGroupSetBits(egControl, E_COOLER | E_HEATER);
     160e:	66 e0       	ldi	r22, 0x06	; 6
     1610:	70 e0       	ldi	r23, 0x00	; 0
     1612:	80 91 46 06 	lds	r24, 0x0646	; 0x800646 <egControl>
@@ -2727,7 +2727,7 @@ void T_SysCheck(void* pvParam)
     161e:	8a e0       	ldi	r24, 0x0A	; 10
     1620:	90 e0       	ldi	r25, 0x00	; 0
     1622:	0e 94 bb 08 	call	0x1176	; 0x1176 <vTaskDelay>
-			xEventGroupClearBits(egControl, E_COOLER | E_HEATER);	/* TODO */
+			xEventGroupClearBits(egControl, E_COOLER | E_HEATER);
     1626:	66 e0       	ldi	r22, 0x06	; 6
     1628:	70 e0       	ldi	r23, 0x00	; 0
     162a:	80 91 46 06 	lds	r24, 0x0646	; 0x800646 <egControl>
@@ -3322,10 +3322,10 @@ void T_Sensing(void* pvParam)
 						
 		}
 
-		if(E_OK == Humit_u16_Read(&humiValue))
+		if(E_OK == Humi_u16_Read(&humiValue))
     194c:	ce 01       	movw	r24, r28
     194e:	02 96       	adiw	r24, 0x02	; 2
-    1950:	0e 94 eb 0f 	call	0x1fd6	; 0x1fd6 <Humit_u16_Read>
+    1950:	0e 94 eb 0f 	call	0x1fd6	; 0x1fd6 <Humi_u16_Read>
     1954:	81 11       	cpse	r24, r1
     1956:	19 c0       	rjmp	.+50     	; 0x198a <T_Sensing+0x8e>
 		{
@@ -3356,7 +3356,7 @@ void T_Sensing(void* pvParam)
 		
 		else
 		{
-						
+			
 		}
 		vTaskDelay(500);  	/* Task periodicity is 1 sec */
     198a:	84 ef       	ldi	r24, 0xF4	; 244
@@ -4065,7 +4065,7 @@ int main(void)
     1dce:	90 93 49 06 	sts	0x0649, r25	; 0x800649 <bsCheck+0x1>
     1dd2:	80 93 48 06 	sts	0x0648, r24	; 0x800648 <bsCheck>
 
-	/* tasks creation with different periorities */
+	/* tasks creation with different priorities */
 	xTaskCreate(T_Display, 	 NULL, 200, NULL, 2, NULL);
     1dd6:	a1 2c       	mov	r10, r1
     1dd8:	b1 2c       	mov	r11, r1
@@ -4144,6 +4144,12 @@ int main(void)
     1e66:	08 95       	ret
 
 00001e68 <LCD_sendCommand>:
+
+void LCD_displayStringRowColumn(uint8 row,uint8 col,const char *Str)
+{
+	LCD_goToRowColumn(row,col); /* go to to the required LCD position */
+	LCD_displayString(Str); /* display the string */
+}
     1e68:	95 98       	cbi	0x12, 5	; 18
     1e6a:	96 98       	cbi	0x12, 6	; 18
     1e6c:	ef ec       	ldi	r30, 0xCF	; 207
@@ -4266,6 +4272,9 @@ int main(void)
     1f50:	08 95       	ret
 
 00001f52 <LCD_intgerToString>:
+
+void LCD_intgerToString(int data)
+{
     1f52:	cf 93       	push	r28
     1f54:	df 93       	push	r29
     1f56:	00 d0       	rcall	.+0      	; 0x1f58 <LCD_intgerToString+0x6>
@@ -4284,9 +4293,13 @@ int main(void)
     1f64:	6f 5f       	subi	r22, 0xFF	; 255
     1f66:	7f 4f       	sbci	r23, 0xFF	; 255
     1f68:	0e 94 ae 11 	call	0x235c	; 0x235c <__itoa_ncheck>
+   char buff[6]; /* String to hold the asci result */
+   itoa(data,buff,10); /* 10 for decimal */
+   LCD_displayString(buff);
     1f6c:	ce 01       	movw	r24, r28
     1f6e:	01 96       	adiw	r24, 0x01	; 1
     1f70:	0e 94 7f 0f 	call	0x1efe	; 0x1efe <LCD_displayString>
+}
     1f74:	26 96       	adiw	r28, 0x06	; 6
     1f76:	0f b6       	in	r0, 0x3f	; 63
     1f78:	f8 94       	cli
@@ -4298,16 +4311,31 @@ int main(void)
     1f84:	08 95       	ret
 
 00001f86 <LCD_clearScreen>:
+
+void LCD_clearScreen(void)
+{
+	LCD_sendCommand(CLEAR_COMMAND); /* clear display */ 
     1f86:	81 e0       	ldi	r24, 0x01	; 1
     1f88:	0e 94 34 0f 	call	0x1e68	; 0x1e68 <LCD_sendCommand>
     1f8c:	08 95       	ret
 
 00001f8e <TEMP_u16_Read>:
+
+#include "sensors.h"
+#include "adc.h"
+
+ERROR_t TEMP_u16_Read(uint16 * pTemp)
+{
     1f8e:	cf 93       	push	r28
     1f90:	df 93       	push	r29
     1f92:	ec 01       	movw	r28, r24
+	uint16 adc_read;
+
+	adc_read = ADC_readChannel(TEMP_SENSOR_CH);
     1f94:	80 e0       	ldi	r24, 0x00	; 0
     1f96:	0e 94 13 10 	call	0x2026	; 0x2026 <ADC_readChannel>
+
+	*pTemp = (uint16)(adc_read * 48.80) / 100;
     1f9a:	bc 01       	movw	r22, r24
     1f9c:	80 e0       	ldi	r24, 0x00	; 0
     1f9e:	90 e0       	ldi	r25, 0x00	; 0
@@ -4330,17 +4358,28 @@ int main(void)
     1fc8:	87 95       	ror	r24
     1fca:	99 83       	std	Y+1, r25	; 0x01
     1fcc:	88 83       	st	Y, r24
+
+	return E_OK;
+}
     1fce:	80 e0       	ldi	r24, 0x00	; 0
     1fd0:	df 91       	pop	r29
     1fd2:	cf 91       	pop	r28
     1fd4:	08 95       	ret
 
-00001fd6 <Humit_u16_Read>:
+00001fd6 <Humi_u16_Read>:
+
+ERROR_t Humi_u16_Read(uint16 * pHumi)
+{
     1fd6:	cf 93       	push	r28
     1fd8:	df 93       	push	r29
     1fda:	ec 01       	movw	r28, r24
+	uint16 adc_read;
+
+	adc_read = ADC_readChannel(HUMI_SENSOR_CH);
     1fdc:	81 e0       	ldi	r24, 0x01	; 1
     1fde:	0e 94 13 10 	call	0x2026	; 0x2026 <ADC_readChannel>
+	
+	*pHumi = (uint16)(adc_read * 48.80) / 100;
     1fe2:	bc 01       	movw	r22, r24
     1fe4:	80 e0       	ldi	r24, 0x00	; 0
     1fe6:	90 e0       	ldi	r25, 0x00	; 0
@@ -4363,34 +4402,70 @@ int main(void)
     2010:	87 95       	ror	r24
     2012:	99 83       	std	Y+1, r25	; 0x01
     2014:	88 83       	st	Y, r24
+
+	return E_OK;
+}
     2016:	80 e0       	ldi	r24, 0x00	; 0
     2018:	df 91       	pop	r29
     201a:	cf 91       	pop	r28
     201c:	08 95       	ret
 
 0000201e <ADC_init>:
+	/* ADMUX Register Bits Description:
+	 * REFS1:0 = 00 to choose to connect external reference voltage by input this voltage through AREF pin
+	 * ADLAR   = 0 right adjusted for adc data registers ------xx xxxxxxxx
+	 * MUX4:0  = 00000 to choose channel (0) as initialization
+	 */
+	ADMUX = 0;
     201e:	17 b8       	out	0x07, r1	; 7
+	/* ADCSRA Register Bits Description:
+	 * ADEN    = 1 Enable ADC
+	 * ADIE    = 0 Disable ADC Interrupt
+	 * ADPS2:0 = 110 to choose ADC_Clock= F_CPU/8 = 8Mhz/64= 125Khz --> ADC must operate in range 50-200Khz
+	 */
+	ADCSRA = (1<<ADEN) | (1<<ADPS2) | (1<<ADPS1);
     2020:	86 e8       	ldi	r24, 0x86	; 134
     2022:	86 b9       	out	0x06, r24	; 6
     2024:	08 95       	ret
 
 00002026 <ADC_readChannel>:
+
+uint16 ADC_readChannel(uint8 channel_num)
+{
+	channel_num &= 0x07; /* channel number must be from (0 --> 7)  0x0000 0111*/
+	
+	ADMUX &= 0xE0; /* clear first 5 bits in the ADMUX (channel number) before set the required channel 0x1110 0000*/
     2026:	97 b1       	in	r25, 0x07	; 7
     2028:	90 7e       	andi	r25, 0xE0	; 224
     202a:	97 b9       	out	0x07, r25	; 7
+	ADMUX = ADMUX | channel_num; /* choose the correct channel by setting the channel number in MUX4:0 bits */
     202c:	97 b1       	in	r25, 0x07	; 7
     202e:	87 70       	andi	r24, 0x07	; 7
     2030:	98 2b       	or	r25, r24
     2032:	97 b9       	out	0x07, r25	; 7
+	
+	SET_BIT(ADCSRA,ADSC); /* start conversion write '1' to ADSC */
     2034:	36 9a       	sbi	0x06, 6	; 6
+	while(BIT_IS_CLEAR(ADCSRA,ADIF)); /* wait for conversion to complete ADIF becomes '1' */
     2036:	34 9b       	sbis	0x06, 4	; 6
     2038:	fe cf       	rjmp	.-4      	; 0x2036 <ADC_readChannel+0x10>
+	
+	SET_BIT(ADCSRA,ADIF); /* clear ADIF by write '1' to it :) */
     203a:	34 9a       	sbi	0x06, 4	; 6
+	
+	return ADC; /* return the data register */
     203c:	84 b1       	in	r24, 0x04	; 4
     203e:	95 b1       	in	r25, 0x05	; 5
+}
     2040:	08 95       	ret
 
 00002042 <UART_init>:
+	 * flag is set to one */
+	while(BIT_IS_CLEAR(UCSRA,RXC)){}
+	/* Read the received data from the Rx buffer (UDR) and the RXC flag 
+	   will be cleared after read this data */	 
+    return UDR;		
+}
     2042:	82 e0       	ldi	r24, 0x02	; 2
     2044:	8b b9       	out	0x0b, r24	; 11
     2046:	88 e1       	ldi	r24, 0x18	; 24
@@ -4409,34 +4484,69 @@ int main(void)
     205c:	08 95       	ret
 
 0000205e <UART_receiveByte_NonBlocking>:
+
+ERROR_t UART_receiveByte_NonBlocking(uint8 * pData)
+{
+	/* Wait for data to be received */
+	if ( (UCSRA & (1<<RXC)) )
     205e:	5f 9b       	sbis	0x0b, 7	; 11
     2060:	05 c0       	rjmp	.+10     	; 0x206c <UART_receiveByte_NonBlocking+0xe>
+	{
+		*pData = UDR;
     2062:	2c b1       	in	r18, 0x0c	; 12
     2064:	fc 01       	movw	r30, r24
     2066:	20 83       	st	Z, r18
+		return E_OK;
     2068:	80 e0       	ldi	r24, 0x00	; 0
     206a:	08 95       	ret
+	}
+	else
+	{
+		return PENDING;
     206c:	82 e0       	ldi	r24, 0x02	; 2
+	}
+
+}
     206e:	08 95       	ret
 
 00002070 <UART_sendString>:
+
+void UART_sendString(const char *Str)
+{
     2070:	0f 93       	push	r16
     2072:	1f 93       	push	r17
     2074:	cf 93       	push	r28
     2076:	fc 01       	movw	r30, r24
+	uint8 i = 0;
+	while(Str[i] != '\0')
     2078:	80 81       	ld	r24, Z
     207a:	88 23       	and	r24, r24
     207c:	59 f0       	breq	.+22     	; 0x2094 <UART_sendString+0x24>
     207e:	8f 01       	movw	r16, r30
     2080:	c0 e0       	ldi	r28, 0x00	; 0
+	{
+		UART_sendByte(Str[i]);
     2082:	0e 94 2b 10 	call	0x2056	; 0x2056 <UART_sendByte>
+		i++;
     2086:	cf 5f       	subi	r28, 0xFF	; 255
+}
+
+void UART_sendString(const char *Str)
+{
+	uint8 i = 0;
+	while(Str[i] != '\0')
     2088:	f8 01       	movw	r30, r16
     208a:	ec 0f       	add	r30, r28
     208c:	f1 1d       	adc	r31, r1
     208e:	80 81       	ld	r24, Z
     2090:	81 11       	cpse	r24, r1
     2092:	f7 cf       	rjmp	.-18     	; 0x2082 <UART_sendString+0x12>
+	{
+		UART_sendByte(*Str);
+		Str++;
+	}		
+	*******************************************************************/
+}
     2094:	cf 91       	pop	r28
     2096:	1f 91       	pop	r17
     2098:	0f 91       	pop	r16

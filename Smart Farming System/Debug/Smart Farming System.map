@@ -244,7 +244,7 @@ Discarded input sections
  .text          0x00000000        0x0 src/MCAL/uart.o
  .data          0x00000000        0x0 src/MCAL/uart.o
  .bss           0x00000000        0x0 src/MCAL/uart.o
- .text.UART_recieveByte
+ .text.UART_receiveByte
                 0x00000000        0x8 src/MCAL/uart.o
  .text.UART_receiveString
                 0x00000000       0x42 src/MCAL/uart.o
@@ -788,9 +788,9 @@ END GROUP
  .text.TEMP_u16_Read
                 0x00001f8e       0x48 src/ECU/sensors.o
                 0x00001f8e                TEMP_u16_Read
- .text.Humit_u16_Read
+ .text.Humi_u16_Read
                 0x00001fd6       0x48 src/ECU/sensors.o
-                0x00001fd6                Humit_u16_Read
+                0x00001fd6                Humi_u16_Read
  .text.ADC_init
                 0x0000201e        0x8 src/MCAL/adc.o
                 0x0000201e                ADC_init
@@ -1115,7 +1115,7 @@ END GROUP
  .debug_abbrev  0x000013e8       0x7a src/MCAL/adc.o
  .debug_abbrev  0x00001462      0x12a src/MCAL/uart.o
 
-.debug_line     0x00000000     0x2bd9
+.debug_line     0x00000000     0x2bdc
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x115 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/atmega32/avr5/crtatmega32.o
  .debug_line    0x00000115      0x3b1 FreeRTOS/Src/event_groups.o
@@ -1126,9 +1126,9 @@ END GROUP
  .debug_line    0x00001472      0x8fb FreeRTOS/Src/tasks.o
  .debug_line    0x00001d6d      0x826 main.o
  .debug_line    0x00002593      0x2dd src/ECU/lcd.o
- .debug_line    0x00002870       0xa6 src/ECU/sensors.o
- .debug_line    0x00002916      0x108 src/MCAL/adc.o
- .debug_line    0x00002a1e      0x1bb src/MCAL/uart.o
+ .debug_line    0x00002870       0xa8 src/ECU/sensors.o
+ .debug_line    0x00002918      0x108 src/MCAL/adc.o
+ .debug_line    0x00002a20      0x1bc src/MCAL/uart.o
 
 .debug_frame    0x00000000      0xab4
  *(.debug_frame)
@@ -1144,7 +1144,7 @@ END GROUP
  .debug_frame   0x000009e0       0x34 src/MCAL/adc.o
  .debug_frame   0x00000a14       0xa0 src/MCAL/uart.o
 
-.debug_str      0x00000000     0x15f1
+.debug_str      0x00000000     0x15f0
  *(.debug_str)
  .debug_str     0x00000000      0x196 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.132/gcc/dev/atmega32/avr5/crtatmega32.o
  .debug_str     0x00000196      0x52e FreeRTOS/Src/event_groups.o
@@ -1159,16 +1159,16 @@ END GROUP
                                 0x74f (size before relaxing)
  .debug_str     0x00000d63      0x465 FreeRTOS/Src/tasks.o
                                 0x91f (size before relaxing)
- .debug_str     0x000011c8      0x2d1 main.o
-                                0x50c (size before relaxing)
- .debug_str     0x00001499       0xac src/ECU/lcd.o
-                                0x2d2 (size before relaxing)
- .debug_str     0x00001545       0x49 src/ECU/sensors.o
-                                0x208 (size before relaxing)
- .debug_str     0x0000158e       0x1e src/MCAL/adc.o
-                                0x1e4 (size before relaxing)
- .debug_str     0x000015ac       0x45 src/MCAL/uart.o
-                                0x244 (size before relaxing)
+ .debug_str     0x000011c8      0x2d0 main.o
+                                0x50b (size before relaxing)
+ .debug_str     0x00001498       0xac src/ECU/lcd.o
+                                0x2bd (size before relaxing)
+ .debug_str     0x00001544       0x49 src/ECU/sensors.o
+                                0x1f2 (size before relaxing)
+ .debug_str     0x0000158d       0x1e src/MCAL/adc.o
+                                0x1cf (size before relaxing)
+ .debug_str     0x000015ab       0x45 src/MCAL/uart.o
+                                0x22f (size before relaxing)
 
 .debug_loc      0x00000000     0x4002
  *(.debug_loc)

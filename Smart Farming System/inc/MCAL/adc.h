@@ -1,8 +1,12 @@
-/*
- * adc.h
- *
- *  Created on: Sep 5, 2015
- *  Author: Ahmed Sabry
+/**
+ * @file adc.h
+ * @author Ahmed Sabry (ahmed.sabry10696@gmail.com)
+ * @brief ADC header file
+ * @version 0.1
+ * @date 2019-05-12
+ * 
+ * @copyright Copyright (c) 2021
+ * 
  */
 
 #ifndef ADC_H_

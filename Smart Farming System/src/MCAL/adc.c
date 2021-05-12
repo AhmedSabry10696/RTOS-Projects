@@ -1,8 +1,12 @@
-/*
- * adc.c
- *
- *  Created on: Sep 5, 2017
- *  Author: Ahmed Sabry
+/**
+ * @file adc.c
+ * @author Ahmed Sabry (ahmed.sabry10696@gmail.com)
+ * @brief adc driver
+ * @version 0.1
+ * @date 2019-05-12
+ * 
+ * @copyright Copyright (c) 2021
+ * 
  */
 
 #include "adc.h"

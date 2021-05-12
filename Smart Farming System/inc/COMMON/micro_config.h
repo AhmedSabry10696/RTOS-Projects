@@ -1,8 +1,12 @@
-/** @file    micro_config.h
- ** @brief   micro controller configuration header file
- ** @author  Ahmed Sabry
- ** @date    22/1/2017
- ** @version 1.0
+/**
+ * @file micro_config.h
+ * @author Ahmed Sabry (ahmed.sabry10696@gmail.com)
+ * @brief micro controller configuratins
+ * @version 0.1
+ * @date 2019-05-12
+ * 
+ * @copyright Copyright (c) 2021
+ * 
  */
 
 #ifndef MICRO_CONFIG_H_
@@ -10,8 +14,10 @@
 
 
 #ifndef F_CPU
-#define F_CPU 8000000UL // 8 MHz Clock frequency
+    /* 8 MHz Clock frequency */
+    #define F_CPU 8000000UL
 #endif  
+
 #include <avr/io.h>
 #include <util/delay.h>
 
