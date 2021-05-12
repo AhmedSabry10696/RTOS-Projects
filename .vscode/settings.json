@@ -2,5 +2,8 @@
     "C_Cpp.errorSquiggles": "Disabled",
     "cSpell.words": [
         "DDRC"
-    ]
+    ],
+    "files.associations": {
+        "app.h": "c"
+    }
 }

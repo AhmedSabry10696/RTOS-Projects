@@ -35,7 +35,7 @@ int main(void)
 
 
 /**
- * @brief Control task
+ * @brief Control heater, cooler and water pump
  * 
  * @param pvParam 
  */
@@ -44,11 +44,11 @@ void T_Control(void* pvParam)
 		
 	while(1)
 	{
-
 		ebControlBits = xEventGroupWaitBits(egControl, E_CONTROLMASK , 0, 0, portMAX_DELAY);
 
 		if ( (ebControlBits & E_HEATER) == E_HEATER )
 		{
+			/* update heater state */
 			if(Motors_State.Heater == ON)
 			{
 				SET_BIT(PORTD,HEATER);
@@ -61,6 +61,7 @@ void T_Control(void* pvParam)
 
 		if( (ebControlBits & E_COOLER) == E_COOLER )
 		{
+			/* update cooler state */ 
 			if(Motors_State.Cooler == ON)
 			{
 				SET_BIT(PORTD,COOLER);
@@ -74,6 +75,7 @@ void T_Control(void* pvParam)
 
 		if( (ebControlBits & E_PUMP) == E_PUMP )
 		{
+			/* update water pump state */
 			if(Motors_State.Water_Pump == ON)
 			{
 				SET_BIT(PORTD,WATER_PUMP);
@@ -88,7 +90,7 @@ void T_Control(void* pvParam)
 }
 
 /**
- * @brief System check task
+ * @brief check current readings form the sensor with threshold values */
  * 
  * @param pvParam 
  */
@@ -142,7 +144,7 @@ void T_SysCheck(void* pvParam)
 }
 
 /**
- * @brief terminal task
+ * @brief take input from user
  * 
  * @param pvParam 
  */
@@ -152,9 +154,11 @@ void T_Terminal(void* pvParam)
 	uint8 strTTemp[4];
 	uint8 strTHumi[4];
 	
+	/* clear two arrays */
 	memset(strTTemp, 0, 3);
 	memset(strTHumi, 0, 3);
 
+	/* to differentiate what i am receiving */
 	static enum {TempReceiving = 13, HumiReceiving} ReceivingState;
 	
 	/* Default entry point */
@@ -171,72 +175,80 @@ void T_Terminal(void* pvParam)
 				{
 					if(MainState == SFS.SystemState )
 					{
-						/* the data is 'C' */
+						/* the data is 'C' configuration */
 						if('C' == data)	
 						{
 							SFS.SystemState = ConfigState;
-							i = 0; 	/* clearing index to start saving from zero in next config */
-							memset(strTHumi, 0, 3);  /* clear temporary data for next config */
-							xEventGroupSetBits(egDisplay, E_ConfigScreen); /* main screen */
-						}
-						else
-						{
-							
+							/* clearing index to start saving from zero in next config */
+							i = 0; 	
+							/* clear temporary data for next config */
+							memset(strTHumi, 0, 3);  
+							/* config screen */
+							xEventGroupSetBits(egDisplay, E_ConfigScreen); 
 						}
 					}
 					
 					else if (ConfigState == SFS.SystemState)
 					{
-						if('C' == data)	/* the data is 'C' */
+						if('C' == data)	/* the data is 'C' cancell */
 						{
 							SFS.SystemState = MainState;
-							xEventGroupSetBits(egDisplay, E_MainScreen); /* Display main */
-							memset(strTTemp, 0, 3);  /* clear temporary data for next config */
-
+							/* Display main */
+							xEventGroupSetBits(egDisplay, E_MainScreen); 
+							/* clear temporary data for next config */
+							memset(strTTemp, 0, 3);  
 						}
 
 						else if(data >= '0' && data <= '9')	/* the data is digit */
 						{
-							if(i<3)	/* if we still did`t receive the third digit */
+							/* receive till the max 3 digits */
+							if(i<3)	
 							{
 								strTTemp[i] = data;
 								i++;
 							}
 						}
 						
-						else if( 'O' == data)	/* the data is 'O' */
+						/* the data is 'O' */
+						else if( 'O' == data)	
 						{
-							if( 0 == atoi(strTTemp) )	/* FIXME *//* if u forget to clear the buffer in some conditions, an error may appear here */
+							/* Do not update the global struct if no data exist */
+							if( 0 == atoi(strTTemp) )
 							{
-								/* Do not update the global struct if no data exist */
-								memset(strTTemp, 0, 3);  /* clear temporary data */
+								/* clear temporary data */
+								memset(strTTemp, 0, 3); 
 							}
 							
 							else
 							{
-								SFS.SensorThreshold.TempT = atoi(strTTemp);	/* update global threshold*/
-								memset(strTTemp, 0, 3);  /* clear temporary data */
+								/* update global threshold*/
+								SFS.SensorThreshold.TempT = atoi(strTTemp);
+								/* clear temporary data */
+								memset(strTTemp, 0, 3); 
+
+								/* give semaphore to system check */
 								xSemaphoreGive(bsCheck);
 								xEventGroupSetBits(egDisplay, E_TTUpdated);
 							}
 
 							i = 0;
-							ReceivingState = HumiReceiving; 	/* Go to Humidity receiving state */
-							xEventGroupSetBits(egDisplay, E_Next); /* in both situation, move the cursor to humidity*/
-
+							/* Go to Humidity receiving state */
+							ReceivingState = HumiReceiving; 	
+							/* in both situation, move the cursor to humidity*/
+							xEventGroupSetBits(egDisplay, E_Next); 
 						}
 						
-						else if( 'N' == data)	/* the data is 'N' */
+						/* the data is 'N' */
+						else if( 'N' == data)	
 						{
-							i = 0; /* to start from zero in Humidity receiving */
-							memset(strTTemp, 0, 3);  /* clear temporary data */
-							ReceivingState = HumiReceiving; 	/* Go to Humidity receiving state */
-							xEventGroupSetBits(egDisplay, E_Next); /* tell the display to move the cursor */
-						}
-						
-						else
-						{
-							/* Ignore, Unpredicted data entered*/
+							/* to start from zero in Humidity receiving */
+							i = 0; 
+							/* clear temporary data */
+							memset(strTTemp, 0, 3);  
+							/* Go to Humidity receiving state */
+							ReceivingState = HumiReceiving; 	
+							/* tell the display to move the cursor */
+							xEventGroupSetBits(egDisplay, E_Next); 
 						}
 						
 					} /* end IF ConfigState */
@@ -246,20 +258,27 @@ void T_Terminal(void* pvParam)
 			
 			case HumiReceiving:
 			{
-				if(E_OK == UART_receiveByte_NonBlocking(&data)) /* if new data exist on terminal */
+				/* if new data exist on terminal */
+				if(E_OK == UART_receiveByte_NonBlocking(&data)) 
 				{
-					if('C' == data)	/* the data is 'C' */
+					/* the data is 'C' cancell */
+					if('C' == data)	
 					{
 						ReceivingState = TempReceiving;
-						i = 0; 	/* clearing index to start saving from zero in next config */
-						memset(strTHumi, 0, 3);  /* clear temporary data for next config */
+						/* clearing index to start saving from zero in next config */
+						i = 0; 	
+						/* clear temporary data for next config */
+						memset(strTHumi, 0, 3);  
 						SFS.SystemState = MainState;
-						xEventGroupSetBits(egDisplay, E_MainScreen); /* Display main */
+						/* Display main */
+						xEventGroupSetBits(egDisplay, E_MainScreen); 
 					}
 					
-					else if( '9' >= data && '0' <= data)	/* the data is digit */
+					/* the data is digit */
+					else if( '9' >= data && '0' <= data)	
 					{
-						if(3 > i)	/* if we still did`t receive the third digit */
+						/* receive till max 3 digits */
+						if(3 > i)	
 						{
 							strTHumi[i] = data;
 							i++;
@@ -267,57 +286,59 @@ void T_Terminal(void* pvParam)
 									
 					}
 					
-					else if('O' == data)	/* the data is 'O' */
+					/* the data is 'O' */
+					else if('O' == data)	
 					{
-						if( 0 == atoi(strTHumi) )  /* if u forget to clear the buffer in some conditions, an error may appear here */
+						/* if there is no data received in humi */
+						if( 0 == atoi(strTHumi) )  
 						{
-							memset(strTTemp, 0, 3);  /* clear temporary data */
+							/* clear temporary data */
+							memset(strTTemp, 0, 3); 
 						}
-						
 						else
 						{
-							SFS.SensorThreshold.HumiT = atoi(strTHumi);	/* update global threshold*/
-							memset(strTTemp, 0, 3);  /* clear temporary data */
+							/* update global threshold*/
+							SFS.SensorThreshold.HumiT = atoi(strTHumi);	
+							/* clear temporary data */
+							memset(strTTemp, 0, 3);  
+							/* give semaphore to system check */
 							xSemaphoreGive(bsCheck);
 							xEventGroupSetBits(egDisplay, E_HTUpdated);
 							vTaskDelay(500);
 						}
 
-						ReceivingState = TempReceiving; /* next state */
+						/* next state */
+						ReceivingState = TempReceiving; 
 						SFS.SystemState = MainState;
-						xEventGroupSetBits(egDisplay, E_MainScreen); /* in both cases go to main screen */
+
+						/* in both cases go to main screen */
+						xEventGroupSetBits(egDisplay, E_MainScreen); 
 
 					}
 					
-					else if('N' == data)	/* the data is 'N' */
+					/* the data is 'N' */
+					else if('N' == data)	
 					{
-						ReceivingState = TempReceiving; 	/* Go to temp receiving state */
+						/* set receiving state in next time to temp */
+						ReceivingState = TempReceiving; 	
 						SFS.SystemState = MainState;
+
 						xEventGroupSetBits(egDisplay, E_MainScreen);
-						memset(strTTemp, 0, 3);  /* clear temporary data */
-					}
-					
-					else
-					{
-						/* Ignore, Unpredicted data entered*/
+						/* clear temporary data */
+						memset(strTTemp, 0, 3); 
 					}
 				} /* end of if data exist in uart */
-				
-				else
-				{
-					/* if no data exist */
-				}
 			}break;
 
 			default:
 				break;
 		}	/* end of switch case */
-	vTaskDelay(50);  /* Task periodicity is 50ms */
-	} /* end of while 1 */
+	vTaskDelay(50);
+	}
 }
 
 /**
- * @brief Sensing task
+ * @brief reading sensors data task
  * 
  * @param pvParam 
  */
@@ -333,32 +354,22 @@ void T_Sensing(void* pvParam)
 			if(  SFS.SensorData.TempData != tempValue )
 			{
 				SFS.SensorData.TempData= tempValue;
-				xSemaphoreGive(bsCheck); /* sys check */
+				/* give semaphore to system check */
+				xSemaphoreGive(bsCheck);
 				xEventGroupSetBits(egDisplay,E_TUpdated);
 			}
-
 		}
-		else
-		{
-						
-		}
-
 		if(E_OK == Humi_u16_Read(&humiValue))
 		{
 			if ( SFS.SensorData.HumiData!= humiValue )
 			{
 				SFS.SensorData.HumiData = humiValue;
+				/* give semaphore to system check */
 				xSemaphoreGive(bsCheck);
 				xEventGroupSetBits(egDisplay,E_HUpdated);
 			}
-
 		}
-		
-		else
-		{
-			
-		}
-		vTaskDelay(500);  	/* Task periodicity is 1 sec */
+		vTaskDelay(500);
 	}
 }
 
@@ -579,7 +590,10 @@ void T_Display(void* pvParam)
 	}
 }
 
-
+/**
+ * @brief system initialization */
+ * 
+ */
 void System_Init(void)
 {
 	/* lcd init */
@@ -588,7 +602,7 @@ void System_Init(void)
 	/* ADC init */
 	ADC_init();
 
-	/* MOTORS */
+	/* MOTORS  directions */
 	SET_BIT(DDRD,WATER_PUMP);
 	SET_BIT(DDRD,HEATER);
 	SET_BIT(DDRD,COOLER);
