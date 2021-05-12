@@ -18,6 +18,7 @@ ERROR_t TEMP_u16_Read(uint16 * pTemp)
 
 	adc_read = ADC_readChannel(TEMP_SENSOR_CH);
 
+	/* convert adc value to temperature */
 	*pTemp = (uint16)(adc_read * 48.80) / 100;
 
 	return E_OK;
@@ -27,6 +28,7 @@ ERROR_t Humi_u16_Read(uint16 * pHumi)
 {
 	uint16 adc_read;
 
+	/* convert adc value to humidity value */
 	adc_read = ADC_readChannel(HUMI_SENSOR_CH);
 	
 	*pHumi = (uint16)(adc_read * 48.80) / 100;
