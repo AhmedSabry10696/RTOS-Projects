@@ -30,15 +30,23 @@ void ADC_init(void)
 
 uint16 ADC_readChannel(uint8 channel_num)
 {
-	channel_num &= 0x07; /* channel number must be from (0 --> 7)  0x0000 0111*/
+	/* channel number must be from (0 --> 7)  0x0000 0111*/
+	channel_num &= 0x07; 
 	
-	ADMUX &= 0xE0; /* clear first 5 bits in the ADMUX (channel number) before set the required channel 0x1110 0000*/
-	ADMUX = ADMUX | channel_num; /* choose the correct channel by setting the channel number in MUX4:0 bits */
+	/* clear 1st 5 bits in the ADMUX (chanel number) before set required channel 0x1110 0000*/
+	ADMUX &= 0xE0; 
 	
-	SET_BIT(ADCSRA,ADSC); /* start conversion write '1' to ADSC */
-	while(BIT_IS_CLEAR(ADCSRA,ADIF)); /* wait for conversion to complete ADIF becomes '1' */
+	/* choose the correct channel by setting the channel number in MUX4:0 bits */
+	ADMUX = ADMUX | channel_num; 
 	
-	SET_BIT(ADCSRA,ADIF); /* clear ADIF by write '1' to it :) */
+	/* start conversion write '1' to ADSC */
+	SET_BIT(ADCSRA,ADSC); 
+	/* wait for conversion to complete ADIF becomes '1' */
+	while(BIT_IS_CLEAR(ADCSRA,ADIF)); 
 	
-	return ADC; /* return the data register */
+	/* clear ADIF by write '1' to it :) */
+	SET_BIT(ADCSRA,ADIF); 
+	
+	/* return the data register */
+	return ADC; 
 }
