@@ -1,6 +1,6 @@
 #   Smart Farming System
 
-A real time system based on FreeRTOS and Atmega32 controlling:
+A real time system based on FreeRTOS and Atmega32 controls:
 
 1 - water pump based on the humidity sensor data.
 
