@@ -55,7 +55,7 @@ void T_Display(void* pvParam);
 #define E_Next			(1<<7)	
 #define E_DISPLAYMASK 	(0b11111111)
 
-/* MOTORs*/
+/* Motores connections */
 #define WATER_PUMP 		PIN2
 #define HEATER	   		PIN3
 #define COOLER	   		PIN4
